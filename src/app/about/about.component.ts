@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { CoursesService } from '../services/courses.service';
 
 @Component({
   selector: 'about',
@@ -6,7 +7,9 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
-  constructor() {}
+  constructor(private coursesService: CoursesService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.coursesService.sampleQuery();
+  }
 }
