@@ -2,7 +2,7 @@ import { COURSES, findLessonsForCourse } from './db-data';
 
 import * as firebase from 'firebase';
 
-let config = {
+const config = {
   apiKey: 'AIzaSyDF4oGePbAXpsOJzKHGeZJgvWD9v83CweQ',
   authDomain: 'fir-course-e6097.firebaseapp.com',
   databaseURL: 'https://fir-course-e6097.firebaseio.com',
@@ -25,7 +25,7 @@ firebase.initializeApp(config);
 const db = firebase.firestore();
 
 async function uploadData() {
-  let batch = db.batch();
+  const batch = db.batch();
 
   const courses = db.collection('courses');
 

@@ -1,12 +1,10 @@
-
-
 .mat-form-field {
-    display: block;
+  display: block;
 }
 
 textarea {
-    height: 100px;
-    resize: vertical;
+  height: 100px;
+  resize: vertical;
 }
 
 .course-image-upload {
@@ -15,9 +13,8 @@ textarea {
   flex-direction: column;
 }
 
-
 .course-image-upload span {
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .upload-progress {
