@@ -18,7 +18,12 @@ export class CoursesService {
 
   public fetchCourses: () => Observable<Course[]> = () => {
     return this.db
-      .collection('courses')
+      .collection('courses', collectionRef => {
+        return collectionRef
+          .orderBy('seqNo')
+          .startAt(0)
+          .endAt(100)
+      })
       .snapshotChanges()
       .pipe(
         map(snaptshots => {
