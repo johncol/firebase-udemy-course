@@ -1,0 +1,16 @@
+.course-card {
+  margin: 20px 10px;
+  border-radius: 0;
+}
+
+.course-actions {
+  text-align: center;
+
+  button {
+    border-radius: 0;
+
+    &:not(:last-child) {
+      margin-right: 15px;
+    }
+  }
+}

@@ -7,7 +7,7 @@ import { CoursesService } from '../services/courses.service';
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
   public courses$: Observable<Course[]>;
