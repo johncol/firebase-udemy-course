@@ -8,6 +8,6 @@ export class CourseResolver implements Resolve<Course> {
   constructor() {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Course> {
-    return of(undefined);
+    return of({} as Course);
   }
 }
