@@ -20,3 +20,7 @@ main {
   flex: 1 1 auto;
   width: 100%;
 }
+
+.mat-nav-list .mat-list-item {
+  margin-right: 70px;
+}
