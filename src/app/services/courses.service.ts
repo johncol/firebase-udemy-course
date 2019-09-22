@@ -11,6 +11,8 @@ const LESSONS: string = 'lessons';
 
 @Injectable({ providedIn: 'root' })
 export class CoursesService {
+  public defaultPageSize: number = 3;
+
   constructor(private db: AngularFirestore) {}
 
   public sampleQuery = () => {
@@ -52,16 +54,19 @@ export class CoursesService {
     );
   }
 
-  public fetchLessons(course: Course, order: 'asc' | 'desc' = 'asc', page: number = 0, pageSize: number = 3): Observable<Lesson[]> {
+  public fetchLessons(course: Course, page: number = 0, pageSize: number = this.defaultPageSize, order: 'asc' | 'desc' = 'asc'): Observable<Lesson[]> {
     return this.db
       .collection(`${COURSES}/${course.id}/${LESSONS}`, collectionRef => {
         return collectionRef
           .orderBy('seqNo', order)
           .limit(pageSize)
-          .startAt(pageSize * page);
+          .startAfter(pageSize * page);
       })
       .snapshotChanges()
-      .pipe(map(this.snapshotsToLessons))
+      .pipe(
+        map(this.snapshotsToLessons),
+        first()
+      )
   }
 
   private snapshotsToCourses: (snapshots: DocumentChangeAction<any>[]) => Course[] = snapshots => {
