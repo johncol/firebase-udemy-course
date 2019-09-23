@@ -4,6 +4,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { Course } from './../model/course';
 import { CoursesService } from './../services/courses.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'course-dialog',
@@ -34,7 +35,8 @@ export class CourseDialogComponent implements OnInit {
   save() {
     this.courseService
       .updateCourse(this.course.id, { titles: this.form.value })
-      .subscribe(() => this.dialogRef.close(this.form.value));
+      .pipe(finalize(() => this.dialogRef.close(this.form.value)))
+      .subscribe();
   }
 
   close() {
