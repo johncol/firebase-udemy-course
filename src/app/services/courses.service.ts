@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { map, first } from 'rxjs/operators';
 
 import { Course } from './../model/course';
@@ -24,7 +24,7 @@ export class CoursesService {
 
   public fetchCourses: () => Observable<Course[]> = () => {
     return this.db
-      .collection(COURSES, collectionRef => {
+      .collection<Course>(COURSES, collectionRef => {
         return collectionRef
           .orderBy('seqNo')
           .startAt(0)
@@ -36,7 +36,7 @@ export class CoursesService {
 
   public findOne: (field: string, value: any) => Observable<Course> = (field, value) => {
     return this.db
-      .collection(COURSES, ref => ref.where(field, "==", value))
+      .collection<Course>(COURSES, ref => ref.where(field, "==", value))
       .snapshotChanges()
       .pipe(
         map(this.snapshotsToCourses),
@@ -56,7 +56,7 @@ export class CoursesService {
 
   public fetchLessons(course: Course, page: number = 0, pageSize: number = this.defaultPageSize, order: 'asc' | 'desc' = 'asc'): Observable<Lesson[]> {
     return this.db
-      .collection(`${COURSES}/${course.id}/${LESSONS}`, collectionRef => {
+      .collection<Lesson>(`${COURSES}/${course.id}/${LESSONS}`, collectionRef => {
         return collectionRef
           .orderBy('seqNo', order)
           .limit(pageSize)
@@ -67,6 +67,10 @@ export class CoursesService {
         map(this.snapshotsToLessons),
         first()
       )
+  }
+
+  public updateCourse: (id: string, changes: Partial<Course>) => Observable<void> = (id, changes) => {
+    return from(this.db.doc<Course>(`courses/${id}`).update(changes));
   }
 
   private snapshotsToCourses: (snapshots: DocumentChangeAction<any>[]) => Course[] = snapshots => {
@@ -82,7 +86,7 @@ export class CoursesService {
     };
   }
 
-  private snapshotsToLessons: (snapshots: DocumentChangeAction<any>[]) => Lesson[] = snapshots => {
+  private snapshotsToLessons: (snapshots: DocumentChangeAction<Lesson>[]) => Lesson[] = snapshots => {
     return snapshots
       .map(snapshot => snapshot.payload.doc)
       .map(this.docToLesson);
