@@ -24,3 +24,7 @@ main {
 .mat-nav-list .mat-list-item {
   margin-right: 70px;
 }
+
+mat-icon {
+  margin-right: 10px;
+}
