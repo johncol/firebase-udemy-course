@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction, QuerySnapshot, DocumentSnapshot, DocumentChangeType } from '@angular/fire/firestore';
 import { firestore } from 'firebase';
 import { Observable, from } from 'rxjs';
-import { map, first, tap } from 'rxjs/operators';
+import { map, first, tap, reduce, flatMap } from 'rxjs/operators';
 
 import { Course } from './../model/course';
 import { Lesson } from './../model/lesson';
@@ -19,10 +19,10 @@ export class CoursesService {
   public sampleCoursesQuery = () => {
     return this.db
       .collection(COURSES)
-      .stateChanges()
+      .snapshotChanges()
       .pipe(
         map(this.snapshotsToCourses),
-        first()
+        tap(console.log)
       );
   }
 
@@ -31,9 +31,12 @@ export class CoursesService {
 
     return this.db.collection(COURSES).snapshotChanges()
       .pipe(
+        first(),
+
         map((snapthosts: DocumentChangeAction<Course>[]) => {
           return snapthosts.map(snapthot => snapthot.payload.doc);
         }),
+
         tap((snapshots: QueryDocumentSnapshot<Course>[]) => {
           snapshots.forEach((snapshot: QueryDocumentSnapshot<Course>) => {
             let { description } = snapshot.data().titles;
@@ -43,17 +46,38 @@ export class CoursesService {
             } else {
               description = `${anyString}${description}`;
             }
-            batch.update(snapshot.ref, {
+
+            const course: Partial<Course> = {
               titles: {
                 description,
                 longDescription: description
               }
-            });
+            };
+            batch.update(snapshot.ref, course);
           });
         }),
-        map(() => from(batch.commit())),
-        first()
+
+        flatMap((snapshots: QueryDocumentSnapshot<Course>[]) => {
+          const courses: Course[] = snapshots.map(this.docToCourse);
+          return from(batch.commit()).pipe(map(() => courses));
+        })
       );
+  }
+
+  public sampleUpdateInTransaction = (courseId: string = 'DiR1bPgMNPKvtHvEaKG2') => {
+    return from(this.db.firestore.runTransaction(async (transaction: firestore.Transaction) => {
+      const ref: firestore.DocumentReference = this.db.doc<Course>(`${COURSES}/${courseId}`).ref;
+
+      const course: Course = {
+        id: ref.id,
+        ...(await transaction.get(ref)).data()
+      } as Course;
+      course.lessonsCount++;
+
+      transaction.update(ref, course);
+
+      return course;
+    }));
   }
 
   public fetchCourses: () => Observable<Course[]> = () => {

@@ -8,8 +8,9 @@ import { Course } from '../model/course';
   styleUrls: ['./samples.component.scss']
 })
 export class SamplesComponent {
-  message: string = '';
   courses: Course[];
+  coursesUpdatedInBatch: Course[];
+  courseUpdatedInTransaction: Course;
 
   constructor(private coursesService: CoursesService) { }
 
@@ -20,8 +21,14 @@ export class SamplesComponent {
   }
 
   batchUpdate() {
-    this.coursesService.sampleBatchUpdate().subscribe(() => {
-      this.message = 'Batch update was done, check the courses list to see them';
+    this.coursesService.sampleBatchUpdate().subscribe((courses: Course[]) => {
+      this.coursesUpdatedInBatch = courses;
+    });
+  }
+
+  transactionUpdate() {
+    this.coursesService.sampleUpdateInTransaction().subscribe((course: Course) => {
+      this.courseUpdatedInTransaction = course;
     });
   }
 

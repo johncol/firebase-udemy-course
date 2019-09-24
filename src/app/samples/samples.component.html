@@ -13,10 +13,22 @@
 
   <section>
     <button mat-flat-button color="primary" (click)="batchUpdate()">
-      Click to Batch Update Courses
+      Click to Update Courses in Batch
     </button>
 
-    <p *ngIf="message !== ''">{{message}}</p>
+    <div *ngIf="coursesUpdatedInBatch" class="courses-viewer">
+      <ngx-json-viewer [json]="coursesUpdatedInBatch" [expanded]="false"></ngx-json-viewer>
+    </div>
+  </section>
+
+  <section>
+    <button mat-flat-button color="primary" (click)="transactionUpdate()">
+      Click to Update lessons count in a Transaction
+    </button>
+
+    <div *ngIf="courseUpdatedInTransaction" class="courses-viewer">
+      <ngx-json-viewer [json]="courseUpdatedInTransaction" [expanded]="false"></ngx-json-viewer>
+    </div>
   </section>
 
 </div>
