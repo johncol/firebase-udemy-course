@@ -37,12 +37,25 @@ $theme: mat-light-theme($primary, $accent);
 
 $font-color: #444;
 
-body {
+body,
+.mat-list-item,
+.mat-card,
+.mat-table,
+.mat-form-field,
+.mat-flat-button,
+.mat-drawer-container {
   font-family: Raleway, sans-serif;
+}
+
+body,
+.mat-list-item,
+.mat-card,
+.mat-table,
+.mat-form-field,
+.mat-drawer-container {
   color: $font-color;
 }
 
-.mat-card,
-.mat-drawer-container {
-  color: $font-color;
+.mat-flat-button {
+  border-radius: 0 !important;
 }

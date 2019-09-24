@@ -35,7 +35,7 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <button class="bottom-toolbar" mat-raised-button color="primary" *ngIf="hasMoreLessons" (click)="loadMore()">
+  <button mat-flat-button color="primary" *ngIf="hasMoreLessons" (click)="loadMore()">
     Load More
   </button>
 </div>
