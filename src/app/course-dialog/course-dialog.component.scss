@@ -7,6 +7,18 @@ textarea {
   resize: vertical;
 }
 
+.buttons {
+  justify-content: center;
+
+  button {
+    border-radius: 0;
+
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+  }
+}
+
 .course-image-upload {
   margin-top: 20px;
   display: flex;

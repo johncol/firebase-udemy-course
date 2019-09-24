@@ -16,15 +16,19 @@ export class CoursesService {
 
   constructor(private db: AngularFirestore) { }
 
-  public sampleQuery = () => {
-    this.db
+  public sampleCoursesQuery = () => {
+    return this.db
       .collection(COURSES)
       .stateChanges()
-      .subscribe(console.log);
+      .pipe(
+        map(this.snapshotsToCourses),
+        first()
+      );
   }
 
   public sampleBatchUpdate = () => {
     const batch: firestore.WriteBatch = this.db.firestore.batch();
+
     return this.db.collection(COURSES).snapshotChanges()
       .pipe(
         map((snapthosts: DocumentChangeAction<Course>[]) => {
@@ -39,13 +43,17 @@ export class CoursesService {
             } else {
               description = `${anyString}${description}`;
             }
-            batch.update(snapshot.ref, { titles: { description } });
+            batch.update(snapshot.ref, {
+              titles: {
+                description,
+                longDescription: description
+              }
+            });
           });
         }),
         map(() => from(batch.commit())),
         first()
-      )
-      .subscribe(console.log);
+      );
   }
 
   public fetchCourses: () => Observable<Course[]> = () => {

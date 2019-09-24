@@ -11,12 +11,11 @@
   </mat-form-field>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button class="mat-raised-button" (click)="close()">
+<mat-dialog-actions class="buttons">
+  <button mat-flat-button color="accent" (click)="close()">
     Close
   </button>
-
-  <button class="mat-raised-button mat-primary" (click)="save()">
+  <button mat-flat-button color="primary" (click)="save()">
     Save
   </button>
 </mat-dialog-actions>

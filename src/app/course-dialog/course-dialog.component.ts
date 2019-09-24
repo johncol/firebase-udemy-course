@@ -9,7 +9,7 @@ import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'course-dialog',
   templateUrl: './course-dialog.component.html',
-  styleUrls: ['./course-dialog.component.css']
+  styleUrls: ['./course-dialog.component.scss']
 })
 export class CourseDialogComponent implements OnInit {
   form: FormGroup;
@@ -30,7 +30,7 @@ export class CourseDialogComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   save() {
     this.courseService

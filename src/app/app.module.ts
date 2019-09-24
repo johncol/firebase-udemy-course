@@ -30,12 +30,14 @@ import { CourseDialogComponent } from './course-dialog/course-dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { AngularFireModule } from '@angular/fire';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 import { environment } from '../environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { LoginComponent } from './login/login.component';
+import { SamplesComponent } from './samples/samples.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,8 @@ import { LoginComponent } from './login/login.component';
     CourseComponent,
     CoursesCardListComponent,
     CourseDialogComponent,
-    LoginComponent
+    LoginComponent,
+    SamplesComponent
   ],
   imports: [
     BrowserModule,
@@ -73,10 +76,11 @@ import { LoginComponent } from './login/login.component';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule.enablePersistence(),
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    NgxJsonViewerModule
   ],
   providers: [CourseResolver],
   bootstrap: [AppComponent],
   entryComponents: [CourseDialogComponent]
 })
-export class AppModule {}
+export class AppModule { }

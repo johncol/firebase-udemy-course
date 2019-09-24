@@ -5,6 +5,7 @@ import { AboutComponent } from './about/about.component';
 import { CourseComponent } from './course/course.component';
 import { CourseResolver } from './services/course.resolver';
 import { LoginComponent } from './login/login.component';
+import { SamplesComponent } from './samples/samples.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'about',
     component: AboutComponent
+  },
+  {
+    path: 'samples',
+    component: SamplesComponent
   },
   {
     path: 'login',
@@ -36,4 +41,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

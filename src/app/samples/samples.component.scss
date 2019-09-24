@@ -1,0 +1,17 @@
+.samples {
+  padding: 0 10px;
+
+  section:not(:last-child) {
+    margin: 10px 0 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .courses-viewer {
+    overflow: hidden;
+    width: 90vw;
+    margin: 10px auto;
+    padding: 10px 20px;
+    border: 1px solid #999;
+  }
+}

@@ -10,6 +10,5 @@ export class AboutComponent implements OnInit {
   constructor(private coursesService: CoursesService) { }
 
   ngOnInit() {
-    this.coursesService.sampleBatchUpdate();
   }
 }
