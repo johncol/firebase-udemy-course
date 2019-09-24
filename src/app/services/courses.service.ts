@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction } from '@angular/fire/firestore';
+import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction, QuerySnapshot, DocumentSnapshot, DocumentChangeType } from '@angular/fire/firestore';
+import { firestore } from 'firebase';
 import { Observable, from } from 'rxjs';
-import { map, first } from 'rxjs/operators';
+import { map, first, tap } from 'rxjs/operators';
 
 import { Course } from './../model/course';
 import { Lesson } from './../model/lesson';
@@ -13,12 +14,37 @@ const LESSONS: string = 'lessons';
 export class CoursesService {
   public defaultPageSize: number = 3;
 
-  constructor(private db: AngularFirestore) {}
+  constructor(private db: AngularFirestore) { }
 
   public sampleQuery = () => {
     this.db
       .collection(COURSES)
       .stateChanges()
+      .subscribe(console.log);
+  }
+
+  public sampleBatchUpdate = () => {
+    const batch: firestore.WriteBatch = this.db.firestore.batch();
+    return this.db.collection(COURSES).snapshotChanges()
+      .pipe(
+        map((snapthosts: DocumentChangeAction<Course>[]) => {
+          return snapthosts.map(snapthot => snapthot.payload.doc);
+        }),
+        tap((snapshots: QueryDocumentSnapshot<Course>[]) => {
+          snapshots.forEach((snapshot: QueryDocumentSnapshot<Course>) => {
+            let { description } = snapshot.data().titles;
+            const anyString: string = '[Modified in batch] ';
+            if (description.startsWith(anyString)) {
+              description = description.substring(anyString.length);
+            } else {
+              description = `${anyString}${description}`;
+            }
+            batch.update(snapshot.ref, { titles: { description } });
+          });
+        }),
+        map(() => from(batch.commit())),
+        first()
+      )
       .subscribe(console.log);
   }
 

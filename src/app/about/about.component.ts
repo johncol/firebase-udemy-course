@@ -7,9 +7,9 @@ import { CoursesService } from '../services/courses.service';
   styleUrls: ['./about.component.css']
 })
 export class AboutComponent implements OnInit {
-  constructor(private coursesService: CoursesService) {}
+  constructor(private coursesService: CoursesService) { }
 
   ngOnInit() {
-    this.coursesService.sampleQuery();
+    this.coursesService.sampleBatchUpdate();
   }
 }
