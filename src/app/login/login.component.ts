@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.ui.delete();
   }
 
-  public onLoginSuccessfull = (authResult: any): boolean => {
-    console.log('authResult', authResult);
+  public onLoginSuccessfull = (authResult: any & { user: firebase.User | null }): boolean => {
+    console.log('Auth Result: ', authResult);
     this.ngZone.run(() => this.router.navigate(['courses']));
     return true;
   }
