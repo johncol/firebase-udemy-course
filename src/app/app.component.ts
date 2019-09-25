@@ -11,13 +11,23 @@ import { map } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   userIsLogged$: Observable<boolean>;
   userIsNotLogged$: Observable<boolean>;
+  pictureUrl$: Observable<string | null>;
 
   constructor(private authService: AngularFireAuth) { }
 
   ngOnInit() {
-    this.authService.authState.subscribe((user: firebase.User | null) => console.log('User: ', user));
-    this.userIsLogged$ = this.authService.authState.pipe(map(user => !!user));
-    this.userIsNotLogged$ = this.userIsLogged$.pipe(map(isLogged => !isLogged));
+    this.authService.authState.subscribe((user: firebase.User | null) => {
+      console.log('User: ', user);
+    });
+    this.userIsLogged$ = this.authService.authState.pipe(
+      map(user => !!user)
+    );
+    this.userIsNotLogged$ = this.userIsLogged$.pipe(
+      map(isLogged => !isLogged)
+    );
+    this.pictureUrl$ = this.authService.authState.pipe(
+      map((user: firebase.User) => user ? user.photoURL as string : null)
+    );
   }
 
   logout() {
