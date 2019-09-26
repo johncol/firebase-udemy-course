@@ -75,7 +75,7 @@ import { SamplesComponent } from './samples/samples.component';
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule,
     AngularFireStorageModule,
     NgxJsonViewerModule
   ],
