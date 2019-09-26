@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+  	function isAuthenticated() {
+    	return request.auth.uid != null;
+    }
+    
+    function userExists() {
+    	return exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    
+    function isAdmin() {
+    	return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin;
+    }
+    
+    function isKnownUser() {
+    	return isAuthenticated() && userExists();
+    }
+    
+    function isAdminUser() {
+    	return isKnownUser() && isAdmin();
+    }
+    
+    function isNonEmptyString(field) {
+    	return request.resource.data[field] is string && request.resource.data[field].size() > 0;
+    }
+    
+    function isNonEmptyTitle(title) {
+    	return request.resource.data.titles[title] is string && request.resource.data.titles[title].size() > 0;
+    }
+    
+    function isPositiveNumber(field) {
+    	return request.resource.data[field] is number && request.resource.data[field] > 0;
+    }
+    
+    function isValidCourse() {
+    	return isNonEmptyString("url")
+      	 && isNonEmptyTitle("description")
+      	 && isNonEmptyTitle("longDescription");
+    }
+    
+    function courseStatusIs(status) {
+    	return resource.data.status == status;
+    }
+    
+    match /users/{userId} {
+    	allow read, write: if false;
+    }
+  
+  	match /courses/{courseId} {
+  		allow read;
+  		allow create: if isKnownUser() && isValidCourse();
+  		allow update: if isKnownUser() && isValidCourse() && courseStatusIs("draft");
+  		allow delete: if isAdminUser();
+      
+      match /lessons/{lessinId} {
+      	allow read;
+        allow create, update: if isKnownUser();
+        allow delete: if isAdminUser();
+      }
+  	}
+  }
+}
