@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { finalize, concatMap } from 'rxjs/operators';
 
 import { Course } from './../model/course';
 import { CoursesService } from './../services/courses.service';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'course-dialog',
@@ -13,8 +13,8 @@ import { finalize } from 'rxjs/operators';
 })
 export class CourseDialogComponent implements OnInit {
   form: FormGroup;
-  description: string;
   course: Course;
+  file: File;
 
   constructor(
     private fb: FormBuilder,
@@ -32,11 +32,28 @@ export class CourseDialogComponent implements OnInit {
 
   ngOnInit() { }
 
+  getFile(event: Event) {
+    if (event.target !== null) {
+      this.file = (event.target as any).files[0];
+    }
+  }
+
   save() {
-    this.courseService
-      .updateCourse(this.course.id, { titles: this.form.value })
-      .pipe(finalize(() => this.dialogRef.close(this.form.value)))
-      .subscribe();
+    const titles = this.form.value;
+    if (!this.file) {
+      this.courseService
+        .updateCourse(this.course.id, { titles })
+        .pipe(finalize(() => this.dialogRef.close(titles)))
+        .subscribe();
+    } else {
+      this.courseService.uploadImage(this.course, this.file).pipe(
+        concatMap((uploadedImageUrl: string) => {
+          return this.courseService
+            .updateCourse(this.course.id, { titles, uploadedImageUrl })
+            .pipe(finalize(() => this.dialogRef.close(titles)))
+        })
+      ).subscribe();
+    }
   }
 
   close() {

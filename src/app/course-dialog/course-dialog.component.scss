@@ -17,14 +17,13 @@ textarea {
   }
 }
 
-.course-image-upload {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
+.file-input-wrapper {
+  padding: 15px 0;
 
-.course-image-upload span {
-  margin-bottom: 10px;
+  label {
+    display: block;
+    margin-bottom: 15px;
+  }
 }
 
 .upload-progress {

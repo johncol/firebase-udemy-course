@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction, QuerySnapshot, DocumentSnapshot, DocumentChangeType } from '@angular/fire/firestore';
+import { AngularFireStorage } from '@angular/fire/storage';
 import { firestore } from 'firebase';
 import { Observable, from } from 'rxjs';
-import { map, first, tap, reduce, flatMap } from 'rxjs/operators';
+import { map, first, tap, reduce, flatMap, last, concatMap } from 'rxjs/operators';
 
 import { Course } from './../model/course';
 import { Lesson } from './../model/lesson';
@@ -14,7 +15,10 @@ const LESSONS: string = 'lessons';
 export class CoursesService {
   public defaultPageSize: number = 3;
 
-  constructor(private db: AngularFirestore) { }
+  constructor(
+    private db: AngularFirestore,
+    private storage: AngularFireStorage,
+  ) { }
 
   public sampleCoursesQuery = () => {
     return this.db
@@ -129,6 +133,16 @@ export class CoursesService {
 
   public updateCourse: (id: string, changes: Partial<Course>) => Observable<void> = (id, changes) => {
     return from(this.db.doc<Course>(`courses/${id}`).update(changes));
+  }
+
+  public uploadImage = (course: Course, file: File): Observable<string> => {
+    const path: string = `/courses/${course.id}/${file.name}`;
+    return this.storage.upload(path, file).snapshotChanges().pipe(
+      last(),
+      concatMap((task: firebase.storage.UploadTaskSnapshot) => {
+        return task.ref.getDownloadURL();
+      }),
+    );
   }
 
   private snapshotsToCourses: (snapshots: DocumentChangeAction<any>[]) => Course[] = snapshots => {

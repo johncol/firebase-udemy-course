@@ -1,7 +1,7 @@
 <div class="course">
   <h2>{{ course?.titles?.description }}</h2>
 
-  <img class="course-thumbnail" [src]="course?.iconUrl" />
+  <img class="course-thumbnail" [src]="course.uploadedImageUrl ? course.uploadedImageUrl : course?.iconUrl" />
 
   <div class="spinner-container" *ngIf="loading">
     <mat-spinner></mat-spinner>
