@@ -18,10 +18,10 @@ const updateCountLessons = (updaterFn: (lessonsCount: number) => number) => {
 const incrementLessonsCount = updateCountLessons(lessonsCount => lessonsCount + 1);
 const decrementLessonsCount = updateCountLessons(lessonsCount => lessonsCount - 1);
 
-export const onCreateLesson = functions.firestore
+export const onCreateLesson: functions.CloudFunction<functions.firestore.DocumentSnapshot> = functions.firestore
   .document('courses/{courseId}/lessons/{lessonId}')
   .onCreate(incrementLessonsCount);
 
-export const onDeleteLesson = functions.firestore
+export const onDeleteLesson: functions.CloudFunction<functions.firestore.DocumentSnapshot> = functions.firestore
   .document('courses/{courseId}/lessons/{lessonId}')
   .onDelete(decrementLessonsCount);
