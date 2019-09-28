@@ -5,6 +5,11 @@ import * as cors from 'cors';
 import { Request, Response } from 'express-serve-static-core';
 import { firestore } from './init';
 
+interface Course {
+  seqNo: number;
+  categories: string[];
+}
+
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 export const helloWorld = functions.https.onRequest((_request, response) => {
@@ -16,18 +21,24 @@ export const helloWorld = functions.https.onRequest((_request, response) => {
 const app = express();
 app.use(cors({ origin: true }));
 
-app.get('/courses', async (_request: Request, response: Response) => {
-  console.log('GET /courses');
+app.get('/courses', async (request: Request, response: Response) => {
+  const path: string = `GET ${request.url}`;
+  console.log(path);
 
   try {
     const snapshot: FirebaseFirestore.QuerySnapshot = await firestore.collection('courses').get();
-    const courses: any[] = snapshot.docs
-      .map(doc => ({ ...doc.data() }))
-      .sort((c1: any, c2: any) => c1.seqNo - c2.seqNo);
+    let courses: Course[] = snapshot.docs
+      .map(doc => ({ ...doc.data() } as Course))
+      .sort((c1: Course, c2: Course) => c1.seqNo - c2.seqNo);
+
+    const category: string = request.query['category']
+    if (category) {
+      courses = courses.filter((c: Course) => c.categories.includes(category))
+    }
 
     response.status(200).json({ courses });
   } catch (error) {
-    console.warn('GET /courses failed: ', error);
+    console.warn(`${path} failed:`, error);
     response.status(500).json({ error });
   }
 });
