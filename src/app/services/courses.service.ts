@@ -84,7 +84,7 @@ export class CoursesService {
     }));
   }
 
-  public fetchCourses: () => Observable<Course[]> = () => {
+  public fetchCourses = (): Observable<Course[]> => {
     return this.db
       .collection<Course>(COURSES, collectionRef => {
         return collectionRef
@@ -96,7 +96,7 @@ export class CoursesService {
       .pipe(map(this.snapshotsToCourses));
   }
 
-  public findOne: (field: string, value: any) => Observable<Course> = (field, value) => {
+  public findOne = (field: string, value: any): Observable<Course> => {
     return this.db
       .collection<Course>(COURSES, ref => ref.where(field, "==", value))
       .snapshotChanges()
@@ -107,7 +107,7 @@ export class CoursesService {
       )
   }
 
-  public filterByCategory: (courses: Observable<Course[]>, category: string) => Observable<Course[]> = (courses, category) => {
+  public filterByCategory = (courses: Observable<Course[]>, category: string): Observable<Course[]> => {
     return courses.pipe(
       map(courses => {
         return courses
@@ -116,7 +116,7 @@ export class CoursesService {
     );
   }
 
-  public fetchLessons(course: Course, page: number = 0, pageSize: number = this.defaultPageSize, order: 'asc' | 'desc' = 'asc'): Observable<Lesson[]> {
+  public fetchLessons = (course: Course, page: number = 0, pageSize: number = this.defaultPageSize, order: 'asc' | 'desc' = 'asc'): Observable<Lesson[]> => {
     return this.db
       .collection<Lesson>(`${COURSES}/${course.id}/${LESSONS}`, collectionRef => {
         return collectionRef
@@ -131,7 +131,7 @@ export class CoursesService {
       )
   }
 
-  public updateCourse: (id: string, changes: Partial<Course>) => Observable<void> = (id, changes) => {
+  public updateCourse = (id: string, changes: Partial<Course>): Observable<void> => {
     return from(this.db.doc<Course>(`courses/${id}`).update(changes));
   }
 
@@ -145,33 +145,33 @@ export class CoursesService {
     );
   }
 
-  private snapshotsToCourses: (snapshots: DocumentChangeAction<any>[]) => Course[] = snapshots => {
+  private snapshotsToCourses = (snapshots: DocumentChangeAction<any>[]): Course[] => {
     return snapshots
       .map(snapshot => snapshot.payload.doc)
       .map(this.docToCourse);
   }
 
-  private docToCourse: (doc: QueryDocumentSnapshot<Course>) => Course = doc => {
+  private docToCourse = (doc: QueryDocumentSnapshot<Course>): Course => {
     return {
       id: doc.id,
       ...doc.data()
     };
   }
 
-  private snapshotsToLessons: (snapshots: DocumentChangeAction<Lesson>[]) => Lesson[] = snapshots => {
+  private snapshotsToLessons = (snapshots: DocumentChangeAction<Lesson>[]): Lesson[] => {
     return snapshots
       .map(snapshot => snapshot.payload.doc)
       .map(this.docToLesson);
   }
 
-  private docToLesson: (doc: QueryDocumentSnapshot<Lesson>) => Lesson = doc => {
+  private docToLesson = (doc: QueryDocumentSnapshot<Lesson>): Lesson => {
     return {
       id: doc.id,
       ...doc.data()
     };
   }
 
-  private getOneOrEmpty: (courses: Course[]) => Course = courses => {
+  private getOneOrEmpty = (courses: Course[]): Course => {
     return courses.length === 1 ? courses[0] : {} as Course;
   }
 }
