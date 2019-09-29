@@ -1,0 +1,14 @@
+@import './variables.scss';
+
+@mixin media-query-for($device) {
+  @if $device == tablet {
+    @media only screen and (min-width: $viewport-small) {
+      @content;
+    }
+  }
+  @if $device == desktop {
+    @media only screen and (min-width: $viewport-medium) {
+      @content;
+    }
+  }
+}

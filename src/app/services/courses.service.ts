@@ -5,7 +5,7 @@ import { firestore } from 'firebase';
 import { Observable, from } from 'rxjs';
 import { map, first, tap, flatMap, last, concatMap } from 'rxjs/operators';
 
-import { Course } from './../model/course';
+import { Course, CourseField } from './../model/course';
 
 const COURSES: string = 'courses';
 
@@ -66,11 +66,18 @@ export class CoursesService {
       .collection<Course>(COURSES, collectionRef => {
         return collectionRef
           .orderBy('seqNo')
-          .startAt(0)
           .endAt(100)
       })
       .snapshotChanges()
       .pipe(map(this.snapshotsToCourses));
+  }
+
+  public filterBy = (courses: Observable<Course[]>, field: CourseField, value: string): Observable<Course[]> => {
+    return courses.pipe(
+      map((courses: Course[]) => {
+        return courses.filter((course: Course) => course[field] === value);
+      })
+    )
   }
 
   public findOne = (field: string, value: any): Observable<Course> => {
