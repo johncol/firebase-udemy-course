@@ -68,3 +68,7 @@ Init with
 Deploy with
 
     firebase deploy
+    firebase deploy --only firestore
+    firebase deploy --only hosting
+    firebase deploy --only storage
+    firebase deploy --only functions
