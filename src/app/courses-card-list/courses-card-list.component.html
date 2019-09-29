@@ -1,21 +1,16 @@
 <mat-card *ngFor="let course of courses" class="course-card">
-  <mat-card-header>
-    <mat-card-title>{{ course.titles.description }}</mat-card-title>
-  </mat-card-header>
-
   <img mat-card-image [src]="course.uploadedImageUrl ? course.uploadedImageUrl : course?.iconUrl" />
 
-  <mat-card-content>
-    <p>{{ course.titles.longDescription }}</p>
-  </mat-card-content>
+  <h2 class="course-card__title">
+    {{ course?.titles?.description }}
+  </h2>
 
-  <mat-card-actions class="course-actions">
-    <button mat-flat-button color="primary" [routerLink]="['/courses', course.url]">
-      VIEW COURSE
+  <mat-card-actions class="course-card__actions">
+    <button mat-button color="primary" [routerLink]="['/courses', course.url]">
+      View
     </button>
-
-    <button mat-flat-button color="accent" (click)="editCourse(course)">
-      EDIT
+    <button mat-button color="accent" (click)="editCourse(course)">
+      Edit
     </button>
   </mat-card-actions>
 </mat-card>

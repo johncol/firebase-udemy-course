@@ -1,14 +1,19 @@
+@import './../../styles/mixins.scss';
+@import './../../styles/variables.scss';
+
 .course-card {
   margin: 20px 10px;
   border-radius: 0;
-}
+  width: 220px;
+  margin: 30px auto;
 
-.course-actions {
-  text-align: center;
+  &__title {
+    margin: 0;
+    font-size: 15px;
+  }
 
-  button {
-    &:not(:last-child) {
-      margin-right: 15px;
-    }
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
   }
 }
