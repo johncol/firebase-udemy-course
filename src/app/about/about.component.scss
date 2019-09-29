@@ -1,8 +1,12 @@
-.course-image {
-  max-width: 350px;
-  border-radius: 4px;
-}
-
 .about {
   padding: 40px;
+  
+  &__title {
+    text-align: center;
+  }
+
+  &__image {
+    width: 100%;
+    border-radius: 4px;
+  }
 }
