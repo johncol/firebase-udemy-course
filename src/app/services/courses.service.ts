@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction, QuerySnapshot, DocumentSnapshot, DocumentChangeType } from '@angular/fire/firestore';
+import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { firestore } from 'firebase';
 import { Observable, from } from 'rxjs';
-import { map, first, tap, reduce, flatMap, last, concatMap } from 'rxjs/operators';
+import { map, first, tap, flatMap, last, concatMap } from 'rxjs/operators';
 
 import { Course } from './../model/course';
-import { Lesson } from './../model/lesson';
 
 const COURSES: string = 'courses';
-const LESSONS: string = 'lessons';
 
 @Injectable({ providedIn: 'root' })
 export class CoursesService {
@@ -43,20 +41,15 @@ export class CoursesService {
 
         tap((snapshots: QueryDocumentSnapshot<Course>[]) => {
           snapshots.forEach((snapshot: QueryDocumentSnapshot<Course>) => {
-            let { description } = snapshot.data().titles;
+            let { name } = snapshot.data();
             const anyString: string = '[Modified in batch] ';
-            if (description.startsWith(anyString)) {
-              description = description.substring(anyString.length);
+            if (name.startsWith(anyString)) {
+              name = name.substring(anyString.length);
             } else {
-              description = `${anyString}${description}`;
+              name = `${anyString}${name}`;
             }
 
-            const course: Partial<Course> = {
-              titles: {
-                description,
-                longDescription: description
-              }
-            };
+            const course: Partial<Course> = { name };
             batch.update(snapshot.ref, course);
           });
         }),
@@ -66,22 +59,6 @@ export class CoursesService {
           return from(batch.commit()).pipe(map(() => courses));
         })
       );
-  }
-
-  public sampleUpdateInTransaction = (courseId: string = 'DiR1bPgMNPKvtHvEaKG2') => {
-    return from(this.db.firestore.runTransaction(async (transaction: firestore.Transaction) => {
-      const ref: firestore.DocumentReference = this.db.doc<Course>(`${COURSES}/${courseId}`).ref;
-
-      const course: Course = {
-        id: ref.id,
-        ...(await transaction.get(ref)).data()
-      } as Course;
-      course.lessonsCount++;
-
-      transaction.update(ref, course);
-
-      return course;
-    }));
   }
 
   public fetchCourses = (): Observable<Course[]> => {
@@ -107,30 +84,6 @@ export class CoursesService {
       )
   }
 
-  public filterByCategory = (courses: Observable<Course[]>, category: string): Observable<Course[]> => {
-    return courses.pipe(
-      map(courses => {
-        return courses
-          .filter(course => course.categories.includes(category))
-      })
-    );
-  }
-
-  public fetchLessons = (course: Course, page: number = 0, pageSize: number = this.defaultPageSize, order: 'asc' | 'desc' = 'asc'): Observable<Lesson[]> => {
-    return this.db
-      .collection<Lesson>(`${COURSES}/${course.id}/${LESSONS}`, collectionRef => {
-        return collectionRef
-          .orderBy('seqNo', order)
-          .limit(pageSize)
-          .startAfter(pageSize * page);
-      })
-      .snapshotChanges()
-      .pipe(
-        map(this.snapshotsToLessons),
-        first()
-      )
-  }
-
   public updateCourse = (id: string, changes: Partial<Course>): Observable<void> => {
     return from(this.db.doc<Course>(`courses/${id}`).update(changes));
   }
@@ -152,19 +105,6 @@ export class CoursesService {
   }
 
   private docToCourse = (doc: QueryDocumentSnapshot<Course>): Course => {
-    return {
-      id: doc.id,
-      ...doc.data()
-    };
-  }
-
-  private snapshotsToLessons = (snapshots: DocumentChangeAction<Lesson>[]): Lesson[] => {
-    return snapshots
-      .map(snapshot => snapshot.payload.doc)
-      .map(this.docToLesson);
-  }
-
-  private docToLesson = (doc: QueryDocumentSnapshot<Lesson>): Lesson => {
     return {
       id: doc.id,
       ...doc.data()

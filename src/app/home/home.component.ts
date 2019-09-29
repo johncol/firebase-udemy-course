@@ -14,11 +14,11 @@ export class HomeComponent implements OnInit {
   public beginners$: Observable<Course[]>;
   public advanced$: Observable<Course[]>;
 
-  constructor(private coursesService: CoursesService) {}
+  constructor(private coursesService: CoursesService) { }
 
   ngOnInit() {
     this.courses$ = this.coursesService.fetchCourses();
-    this.beginners$ = this.coursesService.filterByCategory(this.courses$, 'BEGINNER');
-    this.advanced$ = this.coursesService.filterByCategory(this.courses$, 'ADVANCED');
+    this.beginners$ = this.courses$;
+    this.advanced$ = this.courses$;
   }
 }

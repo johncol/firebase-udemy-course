@@ -23,10 +23,10 @@ export class CourseDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) course: Course
   ) {
     this.course = course;
-    const { description, longDescription } = course.titles;
+    const { name, description } = course;
     this.form = this.fb.group({
-      description: [description, Validators.required],
-      longDescription: [longDescription, Validators.required]
+      name: [name, Validators.required],
+      description: [description, Validators.required]
     });
   }
 
@@ -39,18 +39,18 @@ export class CourseDialogComponent implements OnInit {
   }
 
   save() {
-    const titles = this.form.value;
+    const { name, description } = this.form.value;
     if (!this.file) {
       this.courseService
-        .updateCourse(this.course.id, { titles })
-        .pipe(finalize(() => this.dialogRef.close(titles)))
+        .updateCourse(this.course.id, { name, description })
+        .pipe(finalize(() => this.dialogRef.close({ name, description })))
         .subscribe();
     } else {
       this.courseService.uploadImage(this.course, this.file).pipe(
-        concatMap((uploadedImageUrl: string) => {
+        concatMap((image: string) => {
           return this.courseService
-            .updateCourse(this.course.id, { titles, uploadedImageUrl })
-            .pipe(finalize(() => this.dialogRef.close(titles)))
+            .updateCourse(this.course.id, { name, description, image })
+            .pipe(finalize(() => this.dialogRef.close({ name, description, image })))
         })
       ).subscribe();
     }

@@ -1,12 +1,12 @@
 export interface Course {
   id: string;
-  titles: {
-    description: string;
-    longDescription: string;
-  };
-  iconUrl: string;
-  uploadedImageUrl: string;
-  courseListIcon: string;
-  categories: string[];
-  lessonsCount: number;
+  seqNo: number;
+  name: string;
+  url: string;
+  description: string;
+  status: 'done' | 'progress' | 'todo' | 'suggested';
+  entity: string;
+  image: string;
+  credential: string;
+  date: Date;
 }
