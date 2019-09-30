@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction } from '@angular/fire/firestore';
+import { AngularFirestore, QueryDocumentSnapshot, DocumentChangeAction, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { firestore } from 'firebase';
 import { Observable, from } from 'rxjs';
 import { map, first, tap, flatMap, last, concatMap } from 'rxjs/operators';
 
 import { Course, CourseField } from './../model/course';
+import { MY_COURSES } from './courses-data';
 
 const COURSES: string = 'courses';
 
@@ -26,6 +27,16 @@ export class CoursesService {
         map(this.snapshotsToCourses),
         tap(console.log)
       );
+  }
+
+  public createCourses = (): void => {
+    const collection: AngularFirestoreCollection<Course> = this.db.collection(COURSES);
+    MY_COURSES
+      .map(async (course: Course) => {
+        const ref: firestore.DocumentReference = await collection.add(course);
+        return ref.id;
+      })
+      .forEach(console.log);
   }
 
   public sampleBatchUpdate = () => {
