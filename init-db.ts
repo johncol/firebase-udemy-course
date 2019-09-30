@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { COURSES } from './courses-data';
+import { COURSES } from './db-data';
 
 console.log('Uploading data to the database with the following config:\n');
 
