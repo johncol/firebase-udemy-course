@@ -17,7 +17,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.authService.authState.subscribe((user: firebase.User | null) => {
-      console.log('User: ', user);
     });
     this.userIsLogged$ = this.authService.authState.pipe(
       map(user => !!user)
