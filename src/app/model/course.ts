@@ -18,6 +18,8 @@ export interface Course {
   status: CourseStatus;
   entity: string;
   image: string;
-  credential: string;
-  date: Date;
+  repositories: string[];
+  live: string[];
+  credential?: string;
+  date?: Date;
 }
