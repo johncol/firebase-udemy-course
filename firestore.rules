@@ -26,18 +26,17 @@ service cloud.firestore {
     	return request.resource.data[field] is string && request.resource.data[field].size() > 0;
     }
     
-    function isNonEmptyTitle(title) {
-    	return request.resource.data.titles[title] is string && request.resource.data.titles[title].size() > 0;
-    }
-    
     function isPositiveNumber(field) {
     	return request.resource.data[field] is number && request.resource.data[field] > 0;
     }
     
     function isValidCourse() {
     	return isNonEmptyString("url")
-      	 && isNonEmptyTitle("description")
-      	 && isNonEmptyTitle("longDescription");
+      	 && isNonEmptyString("name")
+      	 && isNonEmptyString("description")
+      	 && isNonEmptyString("status")
+      	 && isNonEmptyString("entity")
+      	 && isNonEmptyString("image");
     }
     
     function courseStatusIs(status) {
