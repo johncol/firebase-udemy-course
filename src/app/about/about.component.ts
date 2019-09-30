@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { CoursesService } from '../services/courses.service';
+import { Component, OnInit } from '@angular/core';
+
+import { CoursesService } from './../services/courses.service';
 
 @Component({
   selector: 'about',
