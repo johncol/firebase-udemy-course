@@ -10,7 +10,7 @@ export const CourseStatuses = {
 }
 
 export interface Course {
-  id: string;
+  id?: string;
   seqNo: number;
   name: string;
   url: string;

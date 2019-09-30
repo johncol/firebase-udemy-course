@@ -42,14 +42,14 @@ export class CourseDialogComponent implements OnInit {
     const { name, description } = this.form.value;
     if (!this.file) {
       this.courseService
-        .updateCourse(this.course.id, { name, description })
+        .updateCourse(this.course.id as string, { name, description })
         .pipe(finalize(() => this.dialogRef.close({ name, description })))
         .subscribe();
     } else {
       this.courseService.uploadImage(this.course, this.file).pipe(
         concatMap((image: string) => {
           return this.courseService
-            .updateCourse(this.course.id, { name, description, image })
+            .updateCourse(this.course.id as string, { name, description, image })
             .pipe(finalize(() => this.dialogRef.close({ name, description, image })))
         })
       ).subscribe();
